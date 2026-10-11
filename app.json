@@ -1,18 +1,21 @@
 {
   "expo": {
-    "name": "MAXII",
-    "slug": "MAXII",
+    "name": "MAXIII",
+    "slug": "maxiii",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "maxii",
+    "scheme": "maxiii",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.maxiii.app",
+      "supportsTablet": true
     },
     "android": {
+      "package": "com.maxiii.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#121417",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"

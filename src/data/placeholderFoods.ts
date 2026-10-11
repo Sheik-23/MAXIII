@@ -1,0 +1,396 @@
+export interface FoodPortion {
+  name: string;
+  label: string; // e.g. "1 Katori", "1 Medium Roti", "1 Ladle"
+  grams: number;
+}
+
+export interface FoodItem {
+  id: string;
+  name: string;
+  category: 'Dal & Curries' | 'Breads & Grains' | 'High Protein' | 'Vegetables' | 'Dairy & Snacks';
+  regionalNames: {
+    tamil?: string;
+    hindi?: string;
+    telugu?: string;
+  };
+  source: 'USDA' | 'own_measurement' | 'label';
+  isCookedRecipe?: boolean;
+  densityKcalPerGram?: number;
+  per100g: {
+    kcal: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    fiber: number;
+  };
+  defaultPortionIndex: number;
+  portions: FoodPortion[];
+  verifiedNote?: string;
+}
+
+export const PLACEHOLDER_FOODS: FoodItem[] = [
+  {
+    id: 'f-toor-dal',
+    name: 'Toor Dal Tadka (Cooked)',
+    category: 'Dal & Curries',
+    regionalNames: {
+      tamil: 'துவரம் பருப்பு (Tooram Paruppu)',
+      hindi: 'अरहर दाल तड़का (Arhar Dal Tadka)',
+      telugu: 'కందిపప్పు తాలింపు (Kandi Pappu)',
+    },
+    source: 'own_measurement',
+    isCookedRecipe: true,
+    densityKcalPerGram: 1.21,
+    per100g: {
+      kcal: 121,
+      protein: 6.3,
+      carbs: 16.6,
+      fat: 3.3,
+      fiber: 4.3,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'katori', label: '1 Katori (150g)', grams: 150 },
+      { name: 'big_katori', label: '1 Big Bowl (220g)', grams: 220 },
+      { name: 'ladle', label: '1 Deep Ladle (75g)', grams: 75 },
+      { name: 'custom', label: 'Exact Grams', grams: 100 },
+    ],
+    verifiedNote: 'Yield-tested: 100g raw dal + 10g oil + water -> 350g cooked',
+  },
+  {
+    id: 'f-phulka',
+    name: 'Phulka / Whole Wheat Roti (No Ghee)',
+    category: 'Breads & Grains',
+    regionalNames: {
+      tamil: 'சப்பாத்தி (Chappathi)',
+      hindi: 'फुल्का / सादी रोटी (Phulka Roti)',
+      telugu: 'పుల్కా / రొట్టె (Phulka Rotte)',
+    },
+    source: 'USDA',
+    per100g: {
+      kcal: 295,
+      protein: 10.5,
+      carbs: 58.0,
+      fat: 2.2,
+      fiber: 8.5,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'phulka_1', label: '1 Medium Phulka (30g)', grams: 30 },
+      { name: 'phulka_2', label: '2 Phulkas (60g)', grams: 60 },
+      { name: 'phulka_3', label: '3 Phulkas (90g)', grams: 90 },
+      { name: 'large_roti', label: '1 Large Roti (45g)', grams: 45 },
+    ],
+    verifiedNote: 'Standard atta dough without oil, dry puff on tawa',
+  },
+  {
+    id: 'f-sambar',
+    name: 'Home-style Vegetable Sambar',
+    category: 'Dal & Curries',
+    regionalNames: {
+      tamil: 'சாம்பார் (Sambar)',
+      hindi: 'सांभर (Sambar)',
+      telugu: 'సాంబారు (Sambaru)',
+    },
+    source: 'own_measurement',
+    isCookedRecipe: true,
+    densityKcalPerGram: 0.78,
+    per100g: {
+      kcal: 78,
+      protein: 3.4,
+      carbs: 11.2,
+      fat: 2.1,
+      fiber: 2.8,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'katori', label: '1 Katori (180g)', grams: 180 },
+      { name: 'big_bowl', label: '1 Big Bowl (250g)', grams: 250 },
+      { name: 'ladle', label: '1 Ladle (80g)', grams: 80 },
+    ],
+    verifiedNote: 'Drumstick, shallots, tomato, dal with 1 tsp tempering oil',
+  },
+  {
+    id: 'f-paneer-bhurji',
+    name: 'Paneer Bhurji (Home-cooked)',
+    category: 'High Protein',
+    regionalNames: {
+      tamil: 'பன்னீர் புர்ஜி (Paneer Bhurji)',
+      hindi: 'पनीर भुर्जी (Paneer Bhurji)',
+      telugu: 'పనీర్ భుర్జీ (Paneer Bhurji)',
+    },
+    source: 'own_measurement',
+    isCookedRecipe: true,
+    per100g: {
+      kcal: 205,
+      protein: 13.5,
+      carbs: 4.8,
+      fat: 14.5,
+      fiber: 1.2,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'medium_serving', label: '1 Medium Serving (150g)', grams: 150 },
+      { name: 'katori', label: '1 Small Katori (100g)', grams: 100 },
+      { name: 'large', label: 'Post-Workout Portion (200g)', grams: 200 },
+    ],
+    verifiedNote: 'Fresh paneer crumbled with onions, tomatoes & measured 5g oil',
+  },
+  {
+    id: 'f-basmati-rice',
+    name: 'Basmati Rice (Steamed Cooked)',
+    category: 'Breads & Grains',
+    regionalNames: {
+      tamil: 'சாதம் / பாசுமதி (Saadham)',
+      hindi: 'चावल (Basmati Chawal)',
+      telugu: 'అన్నం (Annam)',
+    },
+    source: 'USDA',
+    per100g: {
+      kcal: 130,
+      protein: 2.7,
+      carbs: 28.2,
+      fat: 0.3,
+      fiber: 0.4,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'katori', label: '1 Standard Katori (150g)', grams: 150 },
+      { name: 'cup', label: '1 Cooked Cup (180g)', grams: 180 },
+      { name: 'half_katori', label: 'Small Portion (100g)', grams: 100 },
+    ],
+  },
+  {
+    id: 'f-chicken-curry',
+    name: 'Chicken Breast Curry (Home Yield)',
+    category: 'High Protein',
+    regionalNames: {
+      tamil: 'கோழி குழம்பு (Kozhi Kulambu)',
+      hindi: 'चिकन करी (Chicken Curry)',
+      telugu: 'కోడికూర (Kodi Kura)',
+    },
+    source: 'own_measurement',
+    isCookedRecipe: true,
+    per100g: {
+      kcal: 148,
+      protein: 19.8,
+      carbs: 3.2,
+      fat: 6.2,
+      fiber: 0.9,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'regular_serving', label: '1 Big Bowl (200g)', grams: 200 },
+      { name: 'katori', label: '1 Katori (140g)', grams: 140 },
+      { name: 'lifter_portion', label: 'Lifter Double Portion (300g)', grams: 300 },
+    ],
+    verifiedNote: 'Skinless chicken breast, onion-tomato gravy, 8g oil per 500g batch',
+  },
+  {
+    id: 'f-whey-isolate',
+    name: 'Whey Protein Isolate 90%',
+    category: 'High Protein',
+    regionalNames: {
+      hindi: 'व्हे प्रोटीन (Whey)',
+    },
+    source: 'label',
+    per100g: {
+      kcal: 375,
+      protein: 85.0,
+      carbs: 2.5,
+      fat: 1.5,
+      fiber: 0.0,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'scoop_1', label: '1 Standard Scoop (30g)', grams: 30 },
+      { name: 'scoop_1_5', label: '1.5 Scoops (45g)', grams: 45 },
+    ],
+  },
+  {
+    id: 'f-roasted-chana',
+    name: 'Roasted Chana (With Husk)',
+    category: 'Dairy & Snacks',
+    regionalNames: {
+      tamil: 'பொட்டுக்கடலை (Pottukadalai)',
+      hindi: 'भुना चना (Bhuna Chana)',
+      telugu: 'పుట్నాల పప్పు (Putnala Pappu)',
+    },
+    source: 'USDA',
+    per100g: {
+      kcal: 368,
+      protein: 19.0,
+      carbs: 58.0,
+      fat: 5.5,
+      fiber: 15.0,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'handful', label: '1 Fistful Snack (30g)', grams: 30 },
+      { name: 'katori', label: '1 Small Bowl (50g)', grams: 50 },
+    ],
+  },
+  {
+    id: 'f-curd-dahi',
+    name: 'Home-set Curd / Dahi (Cow Milk)',
+    category: 'Dairy & Snacks',
+    regionalNames: {
+      tamil: 'தயிர் (Thayir)',
+      hindi: 'दही (Dahi)',
+      telugu: 'పెరుగు (Perugu)',
+    },
+    source: 'USDA',
+    per100g: {
+      kcal: 61,
+      protein: 3.5,
+      carbs: 4.7,
+      fat: 3.3,
+      fiber: 0.0,
+    },
+    defaultPortionIndex: 0,
+    portions: [
+      { name: 'katori', label: '1 Katori (150g)', grams: 150 },
+      { name: 'half_katori', label: 'Small Portion (100g)', grams: 100 },
+    ],
+  },
+  {
+    id: 'f-boiled-eggs',
+    name: 'Whole Boiled Egg (Large)',
+    category: 'High Protein',
+    regionalNames: {
+      tamil: 'வேகவைத்த முட்டை (Muttai)',
+      hindi: 'उबला अंडा (Ubla Anda)',
+      telugu: 'ఉడికించిన గుడ్డు (Guddu)',
+    },
+    source: 'USDA',
+    per100g: {
+      kcal: 143,
+      protein: 12.6,
+      carbs: 0.7,
+      fat: 9.5,
+      fiber: 0.0,
+    },
+    defaultPortionIndex: 1,
+    portions: [
+      { name: 'egg_1', label: '1 Egg (50g)', grams: 50 },
+      { name: 'egg_2', label: '2 Eggs (100g)', grams: 100 },
+      { name: 'egg_3', label: '3 Eggs (150g)', grams: 150 },
+    ],
+  },
+];
+
+export interface LoggedFoodItem {
+  id: string;
+  foodId: string;
+  name: string;
+  mealType: 'breakfast' | 'lunch' | 'snack' | 'dinner';
+  portionLabel: string;
+  grams: number;
+  kcal: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+  source: string;
+}
+
+export const INITIAL_TODAY_LOGS: LoggedFoodItem[] = [
+  {
+    id: 'log-1',
+    foodId: 'f-phulka',
+    name: 'Phulka / Whole Wheat Roti',
+    mealType: 'breakfast',
+    portionLabel: '2 Phulkas (60g)',
+    grams: 60,
+    kcal: 177,
+    protein: 6.3,
+    carbs: 34.8,
+    fat: 1.3,
+    fiber: 5.1,
+    source: 'USDA',
+  },
+  {
+    id: 'log-2',
+    foodId: 'f-toor-dal',
+    name: 'Toor Dal Tadka (Cooked)',
+    mealType: 'breakfast',
+    portionLabel: '1 Katori (150g)',
+    grams: 150,
+    kcal: 182,
+    protein: 9.5,
+    carbs: 24.9,
+    fat: 5.0,
+    fiber: 6.5,
+    source: 'own_measurement',
+  },
+  {
+    id: 'log-3',
+    foodId: 'f-basmati-rice',
+    name: 'Basmati Rice (Steamed)',
+    mealType: 'lunch',
+    portionLabel: '1 Katori (150g)',
+    grams: 150,
+    kcal: 195,
+    protein: 4.1,
+    carbs: 42.3,
+    fat: 0.5,
+    fiber: 0.6,
+    source: 'USDA',
+  },
+  {
+    id: 'log-4',
+    foodId: 'f-chicken-curry',
+    name: 'Chicken Breast Curry (Home Yield)',
+    mealType: 'lunch',
+    portionLabel: '1 Big Bowl (200g)',
+    grams: 200,
+    kcal: 296,
+    protein: 39.6,
+    carbs: 6.4,
+    fat: 12.4,
+    fiber: 1.8,
+    source: 'own_measurement',
+  },
+  {
+    id: 'log-5',
+    foodId: 'f-whey-isolate',
+    name: 'Whey Protein Isolate 90%',
+    mealType: 'snack',
+    portionLabel: '1 Scoop in Water (30g)',
+    grams: 30,
+    kcal: 113,
+    protein: 25.5,
+    carbs: 0.8,
+    fat: 0.5,
+    fiber: 0.0,
+    source: 'label',
+  },
+  {
+    id: 'log-6',
+    foodId: 'f-roasted-chana',
+    name: 'Roasted Chana (With Husk)',
+    mealType: 'snack',
+    portionLabel: '1 Fistful Snack (35g)',
+    grams: 35,
+    kcal: 129,
+    protein: 6.7,
+    carbs: 20.3,
+    fat: 1.9,
+    fiber: 5.3,
+    source: 'USDA',
+  },
+  {
+    id: 'log-7',
+    foodId: 'f-paneer-bhurji',
+    name: 'Paneer Bhurji (Home-cooked)',
+    mealType: 'dinner',
+    portionLabel: '1 Serving (160g)',
+    grams: 160,
+    kcal: 328,
+    protein: 21.6,
+    carbs: 7.7,
+    fat: 23.2,
+    fiber: 1.9,
+    source: 'own_measurement',
+  },
+];
